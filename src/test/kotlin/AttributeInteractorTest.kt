@@ -2,7 +2,6 @@ import com.vandenbreemen.kevincommon.db.DatabaseSchema
 import com.vandenbreemen.kevincommon.db.SQLiteDAO
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -39,8 +38,6 @@ class AttributeInteractorTest {
 
         interactor.provideAttributesFor("person")
 
-
-
         interactor.defineAttribute(1, "Test_Class")
 
         dao.insert("INSERT INTO person(name) VALUES (?)", arrayOf("Test Person"))
@@ -50,6 +47,27 @@ class AttributeInteractorTest {
         val attributeValue = interactor.getAttributeOf("person", 1, 1)
         attributeValue shouldBeEqualTo "Test"
 
+    }
+
+    @Test
+    fun `should not create attribute tables if already defined`() {
+        val interactor1 = AttributeInteractor(
+            dao
+        )
+
+        interactor1.provideAttributesFor("person")
+
+        interactor1.defineAttribute(1, "Test_Class")
+
+        dao.insert("INSERT INTO person(name) VALUES (?)", arrayOf("Test Person"))
+
+        interactor1.storeAttributeFor("person", 1, 1, "Test")
+
+        val interactor2 = AttributeInteractor(
+            dao
+        )
+        val attributeValue = interactor2.getAttributeOf("person", 1, 1)
+        attributeValue shouldBeEqualTo "Test"
     }
 
 }

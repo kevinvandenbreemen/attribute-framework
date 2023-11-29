@@ -8,13 +8,9 @@ class AttributeInteractor(private val dao: SQLiteDAO) {
     }
 
     private fun initialSetupForAttributes() {
-        val schema = DatabaseSchema(dao)
-        val version = schema.versionNumber
 
-        val v1 = version + 1
-
-        schema.addDatabaseChange(v1, """
-            CREATE TABLE attr_fwk_attr_type(
+        dao.createTable("""
+            CREATE TABLE IF NOT EXISTS attr_fwk_attr_type(
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL
             );
@@ -44,12 +40,9 @@ class AttributeInteractor(private val dao: SQLiteDAO) {
      * Provide for defining attributes for the given table
      */
     fun provideAttributesFor(tableName: String) {
-        val schema = DatabaseSchema(dao)
-        val version = schema.versionNumber
-        val v1 = version +1
 
-        schema.addDatabaseChange(v1, """
-            CREATE TABLE ${tableForTable(tableName)} (
+        dao.createTable( """
+            CREATE TABLE IF NOT EXISTS  ${tableForTable(tableName)} (
                 rec_id INTEGER NOT NULL,
                 attr_id INTEGER NOT NULL,
                 value TEXT,
