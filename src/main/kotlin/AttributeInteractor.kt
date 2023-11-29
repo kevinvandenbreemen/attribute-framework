@@ -1,4 +1,3 @@
-import com.vandenbreemen.kevincommon.db.DatabaseSchema
 import com.vandenbreemen.kevincommon.db.SQLiteDAO
 
 class AttributeInteractor(private val dao: SQLiteDAO) {
